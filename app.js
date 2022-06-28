@@ -6,10 +6,6 @@ var bodyParser = require("body-parser");
 
 
 
-// parse application/x-www-form-urlencoded
-// app.use(bodyParser.urlencoded({ extended: false }));
-
-// parse application/json
 app.use(bodyParser.json());
 
 const {graphqlHTTP}=require('express-graphql')
@@ -17,28 +13,29 @@ const {buildSchema}=require('graphql')
 
 // app.use(express.json())
 
-app.use("/graphql",
+app.use(
+  "/graphql",
   graphqlHTTP({
     schema: buildSchema(`
         type RootQuery{
-            sayWelcome:String!
+            sayWelcome:String
         }
         type RootMutation{
-            sayHellow(name:String):String!
-        }
-        schema{
+            sayHellow(name:String):String
+        } 
+        schema {
             query:RootQuery
             mutation:RootMutation
         }
     `),
+
     rootValue: {
-        saywelcome:()=>{
-            return "welcome to graphql projcet"
-        },
-        sayHellow:(name)=>{
-            return `hellow ${name}, how are you !`
-        }
+      sayWelcome: () => {
+        return "welocme in my first graphql project ";
+      },
+      sayHellow:(arg)=>`hellow ${arg.name}, how are you `
     },
+
     graphiql: true,
   })
 );
