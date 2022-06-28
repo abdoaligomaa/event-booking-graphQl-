@@ -6,12 +6,24 @@ const {graphqlHTTP}=require('express-graphql')
 const {buildSchema}=require('graphql')
 
 
-app.use(graphqlHTTP({
-    schema:null,
-    rootValue:{},
-    graphiql:true
-    
-}))
+app.use(
+  graphqlHTTP({
+    schema: buildSchema(`
+        type RootQuery{
+            sayWelcome:String
+        }
+        type RootMutation{
+            sayHellow(name:String):String
+        }
+        schema{
+            query:RootQuery
+            mutation:RootMutation
+        }
+    `),
+    rootValue: {},
+    graphiql: true,
+  })
+);
 
 app.get('/',(req,res)=>{
     res.send('welcome in my first graphql project...............')
