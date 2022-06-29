@@ -2,21 +2,30 @@ const express=require('express')
 const app=express()
 const port=process.env.PORT || 3000
 
-var bodyParser = require("body-parser");
+// var bodyParser = require("body-parser");
 
 
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 const {graphqlHTTP}=require('express-graphql')
 const {buildSchema}=require('graphql')
 
-// app.use(express.json())
+// you did't have to use express.json and without it every thing is ok.v 
+app.use(express.json())
 
 app.use(
   "/graphql",
   graphqlHTTP({
     schema: buildSchema(`
+        type Event {
+            id: Int!
+            title:String!
+            description:String!
+            price:Int
+            date:String!
+        }
+        
         type RootQuery{
             sayWelcome:String
         }
