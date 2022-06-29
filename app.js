@@ -14,6 +14,8 @@ const {buildSchema}=require('graphql')
 // you did't have to use express.json and without it every thing is ok.v 
 app.use(express.json())
 
+const Events=[]
+
 app.use(
   "/graphql",
   graphqlHTTP({
@@ -53,7 +55,19 @@ app.use(
         return "welocme in my first graphql project ";
       },
       sayHellow: (arg) => `hellow ${arg.name}, how are you `,
-      
+
+      Events: () => Events,
+      CreateEvent:(args)=>{
+        const event = {
+          id: args.eventInput.id,
+          title: args.eventInput.title,
+          description: args.eventInput.description,
+          price: args.eventInput.price,
+          date: args.eventInput.date,
+        };
+        Events.push(event)
+        return event
+      }
     },
 
     graphiql: true,
