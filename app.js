@@ -24,12 +24,26 @@ app.use(
             description:String!
             price:Int
             date:String!
+            createdUser: User!
+        }
+        type User {
+            id: Int!
+            name:String!
+            email:String!
+            password:String
+            createdEvents:[Event!]!
         }
 
         input EventInput{
             title:String!
             description:String!
             price:Int
+        }
+        
+        input UserInput{
+            name:String!
+            email:String!
+            password:String!
         }
 
         type RootQuery{
@@ -52,23 +66,23 @@ app.use(
       },
       sayHellow: (arg) => `hellow ${arg.name}, how are you `,
 
-      Events: async() => {
-        const events=await prisma.event.findMany()
-        return events
+      Events: async () => {
+        const events = await prisma.event.findMany();
+        return events;
       },
-      CreateEvent:async(args)=>{
-        const event=await prisma.event.create({
-          data:{
+      CreateEvent: async (args) => {
+        const event = await prisma.event.create({
+          data: {
             // id: args.eventInput.id,
             title: args.eventInput.title,
             description: args.eventInput.description,
             price: args.eventInput.price,
             // date: args.eventInput.date,
-          }
-        })
-        
-        return event
-      }
+          },
+        });
+
+        return event;
+      },
     },
 
     graphiql: true,
