@@ -45,14 +45,21 @@ app.use(
             email:String!
             password:String!
         }
+        type UserReturn{
+            name:String!
+            email:String!
+            password:String
+        }
 
         type RootQuery{
             sayWelcome:String
             Events:[Event!]!
+            Users:[User!]!
         }
         type RootMutation{
             sayHellow(name:String):String
             CreateEvent(eventInput:EventInput):Event!
+            CreateUser(userInput:UserInput):UserReturn!
         } 
         schema {
             query:RootQuery
@@ -83,6 +90,25 @@ app.use(
 
         return event;
       },
+      CreateUser:async(arg)=>{
+        const oldUser = await prisma.user.findUnique({
+          where: {
+            email: arg.userInput.email,
+          },
+        });
+        if(oldUser){
+          throw new Error("you can not create this user because the email is exist")
+        }
+
+        const user = await prisma.user.create({
+          data: {
+            name: arg.userInput.name,
+            email: arg.userInput.email,
+            password: arg.userInput.password,
+          },
+        });
+        return {...user,password:null}
+      }
     },
 
     graphiql: true,
