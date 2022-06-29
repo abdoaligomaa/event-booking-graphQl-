@@ -92,6 +92,7 @@ app.use(
 
         return event;
       },
+
       CreateUser: async (arg) => {
         const oldUser = await prisma.user.findUnique({
           where: {
@@ -114,11 +115,11 @@ app.use(
         });
         return { ...user, password: null };
       },
-    },
-    Users: async () => {
-      const users = await prisma.user.findMany({})
-      console.log(users);
-      return users;
+      Users: async () => {
+        const users = await prisma.user.findMany();
+        // console.log(users);
+        return users;
+      },
     },
 
     graphiql: true,
