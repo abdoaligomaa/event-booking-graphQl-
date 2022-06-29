@@ -2,11 +2,9 @@ const express=require('express')
 const app=express()
 const port=process.env.PORT || 3000
 
-// var bodyParser = require("body-parser");
+const {PrismaClient}=require("@prisma/client")
+const prisma=new PrismaClient()
 
-
-
-// app.use(bodyParser.json());
 
 const {graphqlHTTP}=require('express-graphql')
 const {buildSchema}=require('graphql')
@@ -14,7 +12,7 @@ const {buildSchema}=require('graphql')
 // you did't have to use express.json and without it every thing is ok.v 
 app.use(express.json())
 
-const Events=[]
+
 
 app.use(
   "/graphql",
@@ -29,11 +27,9 @@ app.use(
         }
 
         input EventInput{
-            id: Int!
             title:String!
             description:String!
             price:Int
-            date:String!
         }
 
         type RootQuery{
@@ -56,16 +52,21 @@ app.use(
       },
       sayHellow: (arg) => `hellow ${arg.name}, how are you `,
 
-      Events: () => Events,
-      CreateEvent:(args)=>{
-        const event = {
-          id: args.eventInput.id,
-          title: args.eventInput.title,
-          description: args.eventInput.description,
-          price: args.eventInput.price,
-          date: args.eventInput.date,
-        };
-        Events.push(event)
+      Events: async() => {
+        const events=await prisma.event.findMany()
+        return events
+      },
+      CreateEvent:async(args)=>{
+        const event=await prisma.event.create({
+          data:{
+            // id: args.eventInput.id,
+            title: args.eventInput.title,
+            description: args.eventInput.description,
+            price: args.eventInput.price,
+            // date: args.eventInput.date,
+          }
+        })
+        
         return event
       }
     },
