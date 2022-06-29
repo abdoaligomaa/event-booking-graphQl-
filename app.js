@@ -1,5 +1,6 @@
 const express=require('express')
 const app=express()
+const bcrypt=require('bcryptjs')
 const port=process.env.PORT || 3000
 
 const {PrismaClient}=require("@prisma/client")
@@ -31,7 +32,7 @@ app.use(
             name:String!
             email:String!
             password:String
-            createdEvents:[Event!]!
+            createdEvents:[Event]
         }
 
         input EventInput{
@@ -46,6 +47,7 @@ app.use(
             password:String!
         }
         type UserReturn{
+            id:Int
             name:String!
             email:String!
             password:String
@@ -90,33 +92,43 @@ app.use(
 
         return event;
       },
-      CreateUser:async(arg)=>{
+      CreateUser: async (arg) => {
         const oldUser = await prisma.user.findUnique({
           where: {
             email: arg.userInput.email,
           },
         });
-        if(oldUser){
-          throw new Error("you can not create this user because the email is exist")
+        if (oldUser) {
+          throw new Error(
+            "you can not create this user because the email is exist"
+          );
         }
+        const hashPassword = await bcrypt.hash(arg.userInput.password, 10);
 
         const user = await prisma.user.create({
           data: {
             name: arg.userInput.name,
             email: arg.userInput.email,
-            password: arg.userInput.password,
+            password: hashPassword,
           },
         });
-        return {...user,password:null}
-      }
+        return { ...user, password: null };
+      },
+    },
+    Users: async () => {
+      const users = await prisma.user.findMany({})
+      console.log(users);
+      return users;
     },
 
     graphiql: true,
   })
 );
 
-app.get('/',(req,res)=>{
-    res.send('welcome in my first graphql project...............')
+app.get('/',async(req,res)=>{
+    const users = await prisma.user.findMany()
+      console.log(users);
+      res.json(users)
 })
 
 app.listen(port,console.log(`server is running in port ${port}`))
