@@ -25,12 +25,22 @@ app.use(
             price:Int
             date:String!
         }
-        
+
+        input EventInput{
+            id: Int!
+            title:String!
+            description:String!
+            price:Int
+            date:String!
+        }
+
         type RootQuery{
             sayWelcome:String
+            Events:[Event!]!
         }
         type RootMutation{
             sayHellow(name:String):String
+            CreateEvent(eventInput:EventInput):Event!
         } 
         schema {
             query:RootQuery
@@ -42,7 +52,8 @@ app.use(
       sayWelcome: () => {
         return "welocme in my first graphql project ";
       },
-      sayHellow:(arg)=>`hellow ${arg.name}, how are you `
+      sayHellow: (arg) => `hellow ${arg.name}, how are you `,
+      
     },
 
     graphiql: true,
