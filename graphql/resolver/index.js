@@ -22,12 +22,16 @@ module.exports = {
         // date: args.eventInput.date,
       },
       include:{
-        CreatUser:true
+        CreatUser:{
+          include:{
+            createdEvents:true
+          }
+        }
       }
     });
     // console.log(event.CreatUser);
 
-    return { ...event, createdUser:event.CreateUser};
+    return { ...event};
   },
 
   CreateUser: async (arg) => {
