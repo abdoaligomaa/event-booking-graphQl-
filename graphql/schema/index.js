@@ -7,7 +7,7 @@ module.exports = buildSchema(`
             description:String!
             price:Int
             date:String!
-            createdUser: User!
+            CreatUser: User
         }
         type User {
             id: Int!
@@ -21,6 +21,7 @@ module.exports = buildSchema(`
             title:String!
             description:String!
             price:Int
+            
         }
         
         input UserInput{

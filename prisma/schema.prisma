@@ -15,8 +15,8 @@ model Event{
   description String
   price Int
   date DateTime @default(now())
-  createdUser Int
-  CreatUser User @relation(fields: [createdUser],references: [id])
+  createId Int
+  CreatUser User @relation(fields: [createId],references: [id])
 
 
 }

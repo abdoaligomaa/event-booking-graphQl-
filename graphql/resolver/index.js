@@ -18,11 +18,16 @@ module.exports = {
         title: args.eventInput.title,
         description: args.eventInput.description,
         price: args.eventInput.price,
+        createId:1
         // date: args.eventInput.date,
       },
+      include:{
+        CreatUser:true
+      }
     });
+    // console.log(event.CreatUser);
 
-    return event;
+    return { ...event, createdUser:event.CreateUser};
   },
 
   CreateUser: async (arg) => {
