@@ -1,0 +1,52 @@
+const { buildSchema } = require("graphql");
+
+module.exports = buildSchema(`
+        type Event {
+            id: Int!
+            title:String!
+            description:String!
+            price:Int
+            date:String!
+            createdUser: User!
+        }
+        type User {
+            id: Int!
+            name:String!
+            email:String!
+            password:String
+            createdEvents:[Event]
+        }
+
+        input EventInput{
+            title:String!
+            description:String!
+            price:Int
+        }
+        
+        input UserInput{
+            name:String!
+            email:String!
+            password:String!
+        }
+        type UserReturn{
+            id:Int
+            name:String!
+            email:String!
+            password:String
+        }
+
+        type RootQuery{
+            sayWelcome:String
+            Events:[Event!]!
+            Users:[User!]!
+        }
+        type RootMutation{
+            sayHellow(name:String):String
+            CreateEvent(eventInput:EventInput):Event!
+            CreateUser(userInput:UserInput):UserReturn!
+        } 
+        schema {
+            query:RootQuery
+            mutation:RootMutation
+        }
+    `);
