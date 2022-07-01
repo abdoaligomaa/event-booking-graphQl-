@@ -21,9 +21,9 @@ module.exports = {
     },
   },
   RootMutation: {
-    sayHellow: (arg) => `hellow ${arg.name}, how are you `,
+    sayHellow: (_,arg) => `hellow ${arg.name}, how are you `,
 
-    CreateEvent: async (args) => {
+    CreateEvent: async (_,args) => {
       const event = await prisma.event.create({
         data: {
           // id: args.eventInput.id,
@@ -33,20 +33,13 @@ module.exports = {
           createId: 1,
           // date: args.eventInput.date,
         },
-        include: {
-          CreatUser: {
-            include: {
-              createdEvents: true,
-            },
-          },
-        },
       });
       // console.log(event.CreatUser);
 
-      return { ...event };
+      return event;
     },
 
-    CreateUser: async (arg) => {
+    CreateUser: async (_,arg) => {
       const oldUser = await prisma.user.findUnique({
         where: {
           email: arg.userInput.email,
