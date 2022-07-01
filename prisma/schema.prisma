@@ -26,5 +26,5 @@ model User{
   name String
   email String @unique
   password String
-  createdEvents Event[]
+  createdEvents Event[] 
 }

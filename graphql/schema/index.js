@@ -7,7 +7,7 @@ module.exports = buildSchema(`
             description:String!
             price:Int
             date:String!
-            CreatUser: User
+            CreatUser: User!
         }
         type User {
             id: Int!
