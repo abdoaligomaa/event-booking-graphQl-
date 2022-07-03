@@ -8,16 +8,11 @@ const port=process.env.PORT || 3000
 const typeDefs = require("./graphql/schema/index");
 const resolvers = require("./graphql/resolver/index");
 
-const {graphqlHTTP}=require('express-graphql')
-const {ApolloServer,gql}=require('apollo-server')
-// const {buildSchema}=require('graphql')
-
+// const {graphqlHTTP}=require('express-graphql')
+const { ApolloServer, gql,  } = require("apollo-server");
+const  {makeExecutableSchema}=require('graphql-tools')
+const {applyMiddleware}=require('graphql-middleware')
 // you did't have to use express.json and without it every thing is ok.v 
-app.use(express.json())
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
 
 /* 
   the next step i will do 
@@ -26,6 +21,18 @@ const server = new ApolloServer({
   3- gard the resover
   4- refactoring the code 
 */
+const schema =makeExecutableSchema({
+  typeDefs,
+  resolvers,
+}) 
+const middleware=[]
+const schemaWithMiddleWare=applyMiddleware(schema,...middleware)
+
+app.use(express.json())
+const server = new ApolloServer({
+ schema:schemaWithMiddleWare
+});
+
 
 app.get('/',async(req,res)=>{
     const users = await prisma.user.findMany()
