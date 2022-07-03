@@ -2,8 +2,8 @@ const express=require('express')
 const app=express()
 const port=process.env.PORT || 3000
 
-// const {PrismaClient}=require("@prisma/client")
-// const prisma=new PrismaClient()
+  const {PrismaClient}=require("@prisma/client")
+  const prisma=new PrismaClient()
 
 const typeDefs = require("./graphql/schema/index");
 const resolvers = require("./graphql/resolver/index");
@@ -12,7 +12,7 @@ const resolvers = require("./graphql/resolver/index");
 const { ApolloServer, gql,  } = require("apollo-server");
 const  {makeExecutableSchema}=require('graphql-tools')
 const {applyMiddleware}=require('graphql-middleware')
-// you did't have to use express.json and without it every thing is ok.v 
+
 
 /* 
   the next step i will do 
@@ -25,7 +25,14 @@ const schema =makeExecutableSchema({
   typeDefs,
   resolvers,
 }) 
-const middleware=[]
+
+const firstMiddleware=async()=>{
+  console.log('first middleware')
+  const events = await prisma.event.findMany();
+      return events;
+  
+}
+const middleware = [firstMiddleware];
 const schemaWithMiddleWare=applyMiddleware(schema,...middleware)
 
 app.use(express.json())
