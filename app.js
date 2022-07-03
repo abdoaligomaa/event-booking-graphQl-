@@ -19,14 +19,13 @@ const server = new ApolloServer({
   resolvers,
 });
 
-// app.use(
-//   "/graphql",
-//   graphqlHTTP({
-//     schema:RootQurey ,
-//     rootValue:RootResolver ,
-//     graphiql: true,
-//   })
-// );
+/* 
+  the next step i will do 
+  1- middleware in the code with apollo server
+  2- auth with graphql (regester, log in)
+  3- gard the resover
+  4- refactoring the code 
+*/
 
 app.get('/',async(req,res)=>{
     const users = await prisma.user.findMany()
