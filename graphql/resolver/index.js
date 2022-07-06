@@ -1,7 +1,11 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken")
+
+const {genterateToken} = require("./utils.js/generateToke");
+const { hashPassword } = require("./utils.js/hashedPassword");
+const {CheckExistingUser}=require('./utils.js/checkExistingUser')
 
 module.exports = {
   RootQuery: {
@@ -46,34 +50,20 @@ module.exports = {
       
 
       // check if the user with that email is exist or not in the database
-      const oldUser = await prisma.user.findUnique({
-        where: {
-          email: arg.userInput.email,
-        },
-      });
-      if (oldUser) {
-        throw new Error(
-          "you can not create this user because the email is exist"
-        );
-      }
+      const isUserExist=await CheckExistingUser(arg.userInput.email)
 
       // hassed the password
-      const hashPassword = await bcrypt.hash(arg.userInput.password, 10);
+      const TheHashPass =await hashPassword(arg.userInput.password);
       // create new user
       const user = await prisma.user.create({
         data: {
           name: arg.userInput.name,
           email: arg.userInput.email,
-          password: hashPassword,
+          password: TheHashPass,
         },
       });
-      console.log(user);
       // create token for this user
-      const token = await jwt.sign(
-        { id: user.id, email: user.email },
-        "jwt secrete string"
-      );
-      console.log(user);
+      const token = genterateToken(user)
       return { ...user, token };
     },
   },
