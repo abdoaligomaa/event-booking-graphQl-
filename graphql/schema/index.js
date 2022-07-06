@@ -10,7 +10,7 @@ module.exports = buildSchema(`
             CreatUser: User!
         }
         type User {
-            id: Int!
+            id: String!
             name:String!
             email:String!
             password:String
@@ -30,7 +30,7 @@ module.exports = buildSchema(`
             password:String!
         }
         type UserReturn{
-            id:Int!
+            id:String!
             name:String!
             email:String!
             token:String

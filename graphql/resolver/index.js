@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcryptjs");
-const jwt=require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   RootQuery: {
@@ -42,7 +42,8 @@ module.exports = {
     },
 
     regester: async (_, arg) => {
-      // TODO validate args for user input
+      // TODO adding validation for user input
+      
 
       // check if the user with that email is exist or not in the database
       const oldUser = await prisma.user.findUnique({
@@ -66,12 +67,14 @@ module.exports = {
           password: hashPassword,
         },
       });
-      console.log(user)
+      console.log(user);
       // create token for this user
-      const token=await jwt.sign({id:user.id,email:user.email},"jwt secrete string")
-      console.log(user)
-      return { ...user ,token};
-
+      const token = await jwt.sign(
+        { id: user.id, email: user.email },
+        "jwt secrete string"
+      );
+      console.log(user);
+      return { ...user, token };
     },
   },
   Event: {
