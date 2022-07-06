@@ -24,8 +24,12 @@ module.exports = buildSchema(`
             
         }
         
-        input UserInput{
+        input  userRegestration{
             name:String!
+            email:String!
+            password:String!
+        }
+        input UserlogIN{
             email:String!
             password:String!
         }
@@ -44,7 +48,8 @@ module.exports = buildSchema(`
         type RootMutation{
             sayHellow(name:String):String
             CreateEvent(eventInput:EventInput):Event!
-            regester(userInput:UserInput!):UserReturn!
+            regester( userRegestration: userRegestration!):UserReturn!
+            logIn(userLogIn:UserlogIN!):UserReturn!
         } 
         schema {
             query:RootQuery

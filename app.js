@@ -42,22 +42,22 @@ const server = new ApolloServer({
 });
 
 
-app.get('/',async(req,res)=>{
-    const users = await prisma.user.findMany()
-      console.log(users);
-      res.json(users)
-})
+// app.get('/',async(req,res)=>{
+//     const users = await prisma.user.findMany()
+//       console.log(users);
+//       res.json(users)
+// })
 // delete all users
-app.get("/deleteUsers", async (req, res) => {
-  const users = await prisma.user.deleteMany();
-  res.send("done");
+// app.get("/deleteUsers", async (req, res) => {
+//   const users = await prisma.user.deleteMany();
+//   res.send("done");
 
-});
-// delete all events
-app.get("/deleteEvents", async (req, res) => {
-  const users = await prisma.event.deleteMany();
-  res.send('done')
-});
+// });
+// // delete all events
+// app.get("/deleteEvents", async (req, res) => {
+//   const users = await prisma.event.deleteMany();
+//   res.send('done')
+// });
 // app.listen(port,console.log(`server is running in port ${port}`))
 server.listen(4000).then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);

@@ -6,9 +6,8 @@ const CheckExistingUser = async (email) => {
       email: email,
     },
   });
-  if (oldUser) {
-    throw new Error("you can not create this user because the email is exist");
-  }
+  return oldUser
+  
 };
 
 module.exports = {

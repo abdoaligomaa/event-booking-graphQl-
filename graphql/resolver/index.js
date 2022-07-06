@@ -1,12 +1,14 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const {UserInputError}=require('apollo-server')
+const {userRegestrationError, UserInputError}=require('apollo-server')
 
 const {genterateToken} = require("./utils.js/generateToke");
 const { hashPassword } = require("./utils.js/hashedPassword");
 const {CheckExistingUser}=require('./utils.js/checkExistingUser')
 const {validateRegisterInput}=require('./utils.js/registrationValidation')
 const { validateLoginInput } = require("./utils.js/loginValidation");
+const {checkValidpassword}=require('./utils.js/checkValidPass')
+
 
 module.exports = {
   RootQuery: {
@@ -50,25 +52,30 @@ module.exports = {
       // TODO adding validation for user input
       // check validation of inputs
       const {valid,errors} = validateRegisterInput(
-        arg.userInput.name,
-        arg.userInput.email,
-        arg.userInput.password
+        arg.userRegestration.name,
+        arg.userRegestration.email,
+        arg.userRegestration.password
       );
-      console.log(valid,errors)
       if(!valid){
         throw  new UserInputError('Errors',errors)
       }
 
       // check if the user with that email is exist or not in the database
-      const isUserExist=await CheckExistingUser(arg.userInput.email)
+      const oldUser = await CheckExistingUser(arg.userRegestration.email);
+      if (oldUser) {
+        throw new Error(
+          "you can not create this user because the email is exist"
+        );
+      }
+
 
       // hassed the password
-      const TheHashPass =await hashPassword(arg.userInput.password);
+      const TheHashPass =await hashPassword(arg.userRegestration.password);
       // create new user
       const user = await prisma.user.create({
         data: {
-          name: arg.userInput.name,
-          email: arg.userInput.email,
+          name: arg.userRegestration.name,
+          email: arg.userRegestration.email,
           password: TheHashPass,
         },
       });
@@ -76,6 +83,27 @@ module.exports = {
       const token = genterateToken(user)
       return { ...user, token };
     },
+    
+    logIn:async(_,arg)=>{
+      // check the user is exist in the database
+        const user = await CheckExistingUser(arg.userLogIn.email)
+        if(!user){
+          throw new Error(
+            "you can not create this user because the email is exist"
+          );
+        }
+        // check if the password is correct or not
+        const IscorrectPass=await checkValidpassword(arg.userLogIn.password,user.password)
+        
+        if(!IscorrectPass){
+          throw new Error(
+            "Password is not true ,Please Enter the correct Password"
+          );
+        }
+        const token = genterateToken(user);
+        
+        return {...user,token}
+    }
   },
   Event: {
     CreatUser: async (parent, args) => {
