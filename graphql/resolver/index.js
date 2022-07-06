@@ -1,6 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcryptjs");
+const jwt=require('jsonwebtoken')
+
 module.exports = {
   RootQuery: {
     sayWelcome: () => {
@@ -21,9 +23,9 @@ module.exports = {
     },
   },
   RootMutation: {
-    sayHellow: (_,arg) => `hellow ${arg.name}, how are you `,
+    sayHellow: (_, arg) => `hellow ${arg.name}, how are you `,
 
-    CreateEvent: async (_,args) => {
+    CreateEvent: async (_, args) => {
       const event = await prisma.event.create({
         data: {
           // id: args.eventInput.id,
@@ -39,7 +41,10 @@ module.exports = {
       return event;
     },
 
-    CreateUser: async (_,arg) => {
+    regester: async (_, arg) => {
+      // TODO validate args for user input
+
+      // check if the user with that email is exist or not in the database
       const oldUser = await prisma.user.findUnique({
         where: {
           email: arg.userInput.email,
@@ -50,8 +55,10 @@ module.exports = {
           "you can not create this user because the email is exist"
         );
       }
-      const hashPassword = await bcrypt.hash(arg.userInput.password, 10);
 
+      // hassed the password
+      const hashPassword = await bcrypt.hash(arg.userInput.password, 10);
+      // create new user
       const user = await prisma.user.create({
         data: {
           name: arg.userInput.name,
@@ -59,7 +66,12 @@ module.exports = {
           password: hashPassword,
         },
       });
-      return { ...user, password: null };
+      console.log(user)
+      // create token for this user
+      const token=await jwt.sign({id:user.id,email:user.email},"jwt secrete string")
+      console.log(user)
+      return { ...user ,token};
+
     },
   },
   Event: {

@@ -33,7 +33,7 @@ module.exports = buildSchema(`
             id:Int!
             name:String!
             email:String!
-            token:String!
+            token:String
         }
 
         type RootQuery{
@@ -44,7 +44,7 @@ module.exports = buildSchema(`
         type RootMutation{
             sayHellow(name:String):String
             CreateEvent(eventInput:EventInput):Event!
-            CreateUser(userInput:UserInput):UserReturn!
+            regester(userInput:UserInput!):UserReturn!
         } 
         schema {
             query:RootQuery

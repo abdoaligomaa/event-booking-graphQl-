@@ -49,6 +49,6 @@ app.get('/',async(req,res)=>{
 })
 
 // app.listen(port,console.log(`server is running in port ${port}`))
-server.listen().then(({ url }) => {
+server.listen(4000).then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);
 });
