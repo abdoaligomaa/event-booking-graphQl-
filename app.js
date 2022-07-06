@@ -21,23 +21,24 @@ const {applyMiddleware}=require('graphql-middleware')
   3- gard the resover
   4- refactoring the code 
 */
-const schema =makeExecutableSchema({
-  typeDefs,
-  resolvers,
-}) 
+// const schema =makeExecutableSchema({
+//   typeDefs,
+//   resolvers,
+// }) 
 
-const firstMiddleware=async()=>{
-  console.log('first middleware')
-  const events = await prisma.event.findMany();
-      return events;
+// const firstMiddleware=async()=>{
+//   console.log('first middleware')
+//   const events = await prisma.event.findMany();
+//       return events;
   
-}
-const middleware = [firstMiddleware];
-const schemaWithMiddleWare=applyMiddleware(schema,...middleware)
+// }
+// const middleware = [firstMiddleware];
+// const schemaWithMiddleWare=applyMiddleware(schema,...middleware)
 
 app.use(express.json())
 const server = new ApolloServer({
- schema:schemaWithMiddleWare
+  typeDefs,
+  resolvers,
 });
 
 

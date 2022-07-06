@@ -30,10 +30,10 @@ module.exports = buildSchema(`
             password:String!
         }
         type UserReturn{
-            id:Int
+            id:Int!
             name:String!
             email:String!
-            password:String
+            token:String!
         }
 
         type RootQuery{
