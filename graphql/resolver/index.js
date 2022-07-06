@@ -1,11 +1,12 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken")
+const {UserInputError}=require('apollo-server')
 
 const {genterateToken} = require("./utils.js/generateToke");
 const { hashPassword } = require("./utils.js/hashedPassword");
 const {CheckExistingUser}=require('./utils.js/checkExistingUser')
+const {validateRegisterInput}=require('./utils.js/registrationValidation')
+const { validateLoginInput } = require("./utils.js/loginValidation");
 
 module.exports = {
   RootQuery: {
@@ -47,7 +48,16 @@ module.exports = {
 
     regester: async (_, arg) => {
       // TODO adding validation for user input
-      
+      // check validation of inputs
+      const {valid,errors} = validateRegisterInput(
+        arg.userInput.name,
+        arg.userInput.email,
+        arg.userInput.password
+      );
+      console.log(valid,errors)
+      if(!valid){
+        throw  new UserInputError('Errors',errors)
+      }
 
       // check if the user with that email is exist or not in the database
       const isUserExist=await CheckExistingUser(arg.userInput.email)
