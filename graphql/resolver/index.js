@@ -89,7 +89,7 @@ module.exports = {
         const user = await CheckExistingUser(arg.userLogIn.email)
         if(!user){
           throw new Error(
-            "you can not create this user because the email is exist"
+            "This Email does not exist, you should Enter a correct Email"
           );
         }
         // check if the password is correct or not
