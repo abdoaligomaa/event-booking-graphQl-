@@ -13,6 +13,8 @@ const { ApolloServer, gql,  } = require("apollo-server");
 const  {makeExecutableSchema}=require('graphql-tools')
 const {applyMiddleware}=require('graphql-middleware')
 
+const {getUserByToken}=require('./graphql/resolver/utils.js/getuserByToken')
+
 
 /* 
   the next step i will do 
@@ -39,8 +41,14 @@ app.use(express.json())
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context:({req})=>{
-    return {user:{id:123,name:"abdo ali",email:"abdo@gmail.com"}}
+  context:async({req})=>{
+    const token=req.headers.authorization
+    if(!token){
+      return null
+    }else {
+      const user =await getUserByToken(token)
+      return user
+    }
   }
 });
 

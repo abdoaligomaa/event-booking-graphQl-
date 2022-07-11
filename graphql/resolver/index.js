@@ -12,7 +12,8 @@ const {checkValidpassword}=require('./utils.js/checkValidPass')
 
 module.exports = {
   RootQuery: {
-    sayWelcome: () => {
+    sayWelcome: (_,arg,context) => {
+      console.log(context)
       return "welocme in my first graphql project ";
     },
 
