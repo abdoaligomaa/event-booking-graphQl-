@@ -85,6 +85,13 @@ module.exports = {
     },
     
     logIn:async(_,arg)=>{
+
+      // validate login inputs
+      const {errors,valid} = validateLoginInput(arg.userLogIn.email, arg.userLogIn.password);
+       if (!valid) {
+          throw new UserInputError("Errors", errors);
+        }
+
       // check the user is exist in the database
         const user = await CheckExistingUser(arg.userLogIn.email)
         if(!user){

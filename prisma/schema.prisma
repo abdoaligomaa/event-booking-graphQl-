@@ -9,22 +9,24 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model Event{
-  id  Int @unique  @default(autoincrement())
-  title String
+
+model Event {
+  id          Int      @unique @default(autoincrement())
+  title       String
   description String
-  price Int
-  date DateTime @default(now())
-  createId String
-  CreateUser User @relation(fields: [createId],references: [id])
-
-
+  price       Int
+  date        DateTime @default(now())
+  createId    String
+  CreateUser  User     @relation(fields: [createId], references: [id])
 }
 
-model User{
-  id  String @id  @default(uuid())
-  name String
-  email String @unique
-  password String
-  createdEvents Event[] 
+model User {
+  id            String  @id @default(uuid())
+  name          String
+  email         String  @unique
+  password      String
+  createdEvents Event[]
 }
+
+
+
