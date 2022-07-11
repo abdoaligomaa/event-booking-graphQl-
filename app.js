@@ -39,6 +39,9 @@ app.use(express.json())
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context:({req})=>{
+    return {user:{id:123,name:"abdo ali",email:"abdo@gmail.com"}}
+  }
 });
 
 

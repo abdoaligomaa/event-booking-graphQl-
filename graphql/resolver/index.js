@@ -30,7 +30,7 @@ module.exports = {
     },
   },
   RootMutation: {
-    sayHellow: (_, arg) => `hellow ${arg.name}, how are you `,
+    sayHellow: (_, arg,) => `hellow ${arg.name}, how are you `,
 
     CreateEvent: async (_, args) => {
       const event = await prisma.event.create({
