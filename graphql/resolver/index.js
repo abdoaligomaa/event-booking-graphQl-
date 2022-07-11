@@ -13,7 +13,13 @@ module.exports = {
   RootQuery: {
     sayWelcome: (_, arg, context) => {
       console.log(context)
-      return "welocme in my first graphql project ";
+      // if(context.reuslt===null){
+      //   return "you can not use this resolver"
+      // }
+      if(context.user){
+
+        return ` welcome ${context.user.email}`
+      }
     },
 
     // get all events

@@ -44,17 +44,16 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => {
-    const token = req.headers.authorization;
-    if(!token){
-      throw new AuthenticationError('Token must be provided')
-    }else {
-      const user =await getUserByToken(token)
-      if(!user){
-      throw new AuthenticationError("you must log in first and Enter true token");
-
+    const token = req.headers.authorization||' ';
+    if(token.length>5){
+      const user = getUserByToken(token)
+      if(user){
+        return {user}
       }
-      return {user}
+        return {reuslt:null};  
+      
     }
+      
   }
 });
 
