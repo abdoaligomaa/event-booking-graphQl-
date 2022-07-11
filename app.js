@@ -41,14 +41,21 @@ app.use(express.json())
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context:async({req})=>{
-    const token=req.headers.authorization
+  context: async ({ req }) => {
+    const authToken = req.headers.authorization;
+    const token=authToken.split('Bearer ')[1]
+    // console.log(token)
+
     if(!token){
       return null
     }else {
       const user =await getUserByToken(token)
-      return user
+      // console.log(user)
+      return {user}
     }
+    // const user = getUserByToken(token);
+    //   console.log(user)
+    //   return user
   }
 });
 

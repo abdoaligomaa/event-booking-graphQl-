@@ -1,18 +1,17 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const {userRegestrationError, UserInputError}=require('apollo-server')
+const { userRegestrationError, UserInputError } = require("apollo-server");
 
-const {genterateToken} = require("./utils.js/generateToke");
+const { genterateToken } = require("./utils.js/generateToke");
 const { hashPassword } = require("./utils.js/hashedPassword");
-const {CheckExistingUser}=require('./utils.js/checkExistingUser')
-const {validateRegisterInput}=require('./utils.js/registrationValidation')
+const { CheckExistingUser } = require("./utils.js/checkExistingUser");
+const { validateRegisterInput } = require("./utils.js/registrationValidation");
 const { validateLoginInput } = require("./utils.js/loginValidation");
-const {checkValidpassword}=require('./utils.js/checkValidPass')
-
+const { checkValidpassword } = require("./utils.js/checkValidPass");
 
 module.exports = {
   RootQuery: {
-    sayWelcome: (_,arg,context) => {
+    sayWelcome: (_, arg, context) => {
       console.log(context)
       return "welocme in my first graphql project ";
     },
@@ -31,7 +30,7 @@ module.exports = {
     },
   },
   RootMutation: {
-    sayHellow: (_, arg,) => `hellow ${arg.name}, how are you `,
+    sayHellow: (_, arg) => `hellow ${arg.name}, how are you `,
 
     CreateEvent: async (_, args) => {
       const event = await prisma.event.create({
@@ -52,13 +51,13 @@ module.exports = {
     regester: async (_, arg) => {
       // TODO adding validation for user input
       // check validation of inputs
-      const {valid,errors} = validateRegisterInput(
+      const { valid, errors } = validateRegisterInput(
         arg.userRegestration.name,
         arg.userRegestration.email,
         arg.userRegestration.password
       );
-      if(!valid){
-        throw  new UserInputError('Errors',errors)
+      if (!valid) {
+        throw new UserInputError("Errors", errors);
       }
 
       // check if the user with that email is exist or not in the database
@@ -69,9 +68,8 @@ module.exports = {
         );
       }
 
-
       // hassed the password
-      const TheHashPass =await hashPassword(arg.userRegestration.password);
+      const TheHashPass = await hashPassword(arg.userRegestration.password);
       // create new user
       const user = await prisma.user.create({
         data: {
@@ -81,37 +79,42 @@ module.exports = {
         },
       });
       // create token for this user
-      const token = genterateToken(user)
+      const token = genterateToken(user);
       return { ...user, token };
     },
-    
-    logIn:async(_,arg)=>{
 
+    logIn: async (_, arg) => {
       // validate login inputs
-      const {errors,valid} = validateLoginInput(arg.userLogIn.email, arg.userLogIn.password);
-       if (!valid) {
-          throw new UserInputError("Errors", errors);
-        }
+      const { errors, valid } = validateLoginInput(
+        arg.userLogIn.email,
+        arg.userLogIn.password
+      );
+      if (!valid) {
+        throw new UserInputError("Errors", errors);
+      }
 
       // check the user is exist in the database
-        const user = await CheckExistingUser(arg.userLogIn.email)
-        if(!user){
-          throw new Error(
-            "This Email does not exist, you should Enter a correct Email"
-          );
-        }
-        // check if the password is correct or not
-        const IscorrectPass=await checkValidpassword(arg.userLogIn.password,user.password)
-        
-        if(!IscorrectPass){
-          throw new Error(
-            "Password is not true ,Please Enter the correct Password"
-          );
-        }
-        const token = genterateToken(user);
-        
-        return {...user,token}
-    }
+      const user = await CheckExistingUser(arg.userLogIn.email);
+      if (!user) {
+        throw new Error(
+          "This Email does not exist, you should Enter a correct Email"
+        );
+      }
+      // check if the password is correct or not
+      const IscorrectPass = await checkValidpassword(
+        arg.userLogIn.password,
+        user.password
+      );
+
+      if (!IscorrectPass) {
+        throw new Error(
+          "Password is not true ,Please Enter the correct Password"
+        );
+      }
+      const token = genterateToken(user);
+
+      return { ...user, token };
+    },
   },
   Event: {
     CreatUser: async (parent, args) => {
