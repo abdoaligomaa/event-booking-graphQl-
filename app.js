@@ -2,8 +2,8 @@ const express=require('express')
 const app=express()
 const port=process.env.PORT || 3000
 
-  const {PrismaClient}=require("@prisma/client")
-  const prisma=new PrismaClient()
+const {PrismaClient}=require("@prisma/client")
+const prisma=new PrismaClient()
 
 const typeDefs = require("./graphql/schema/index");
 const resolvers = require("./graphql/resolver/index");
@@ -42,20 +42,13 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => {
-    const authToken = req.headers.authorization;
-    const token=authToken.split('Bearer ')[1]
-    // console.log(token)
-
+    const token = req.headers.authorization;
     if(!token){
       return null
     }else {
       const user =await getUserByToken(token)
-      // console.log(user)
       return {user}
     }
-    // const user = getUserByToken(token);
-    //   console.log(user)
-    //   return user
   }
 });
 
