@@ -52,6 +52,8 @@ const server = new ApolloServer({
       }
         return {reuslt:null};  
       
+    }else{
+      return { reuslt: null };
     }
       
   }

@@ -13,9 +13,9 @@ module.exports = {
   RootQuery: {
     sayWelcome: (_, arg, context) => {
       console.log(context)
-      // if(context.reuslt===null){
-      //   return "you can not use this resolver"
-      // }
+      if(context.reuslt===null){
+        return "you can not use this resolver"
+      }
       if(context.user){
 
         return ` welcome ${context.user.email}`
