@@ -5,6 +5,8 @@ const port=process.env.PORT || 3000
 const {PrismaClient}=require("@prisma/client")
 const prisma=new PrismaClient()
 
+const {AuthenticationError } = require("apollo-server");
+
 const typeDefs = require("./graphql/schema/index");
 const resolvers = require("./graphql/resolver/index");
 
@@ -44,9 +46,13 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     const token = req.headers.authorization;
     if(!token){
-      return null
+      throw new AuthenticationError('Token must be provided')
     }else {
       const user =await getUserByToken(token)
+      if(!user){
+      throw new AuthenticationError("you must log in first and Enter true token");
+
+      }
       return {user}
     }
   }
