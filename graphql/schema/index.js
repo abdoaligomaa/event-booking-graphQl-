@@ -41,7 +41,7 @@ module.exports = buildSchema(`
         }
 
         type RootQuery{
-            sayWelcome:String
+            sayWelcome(name:String!):String!
             Events:[Event!]!
             Users:[User!]!
         }

@@ -25,24 +25,22 @@ const {getUserByToken}=require('./graphql/resolver/utils.js/getuserByToken')
   3- gard the resover
   4- refactoring the code 
 */
-// const schema =makeExecutableSchema({
-//   typeDefs,
-//   resolvers,
-// }) 
-
-// const firstMiddleware=async()=>{
-//   console.log('first middleware')
-//   const events = await prisma.event.findMany();
-//       return events;
-  
-// }
-// const middleware = [firstMiddleware];
-// const schemaWithMiddleWare=applyMiddleware(schema,...middleware)
+const schema =makeExecutableSchema({
+  typeDefs,
+  resolvers,
+}) 
+// permission for the resovers  
+const permissions = shield({
+  RootQuery: {},
+  RootMutation:{
+    
+  },
+});
+const schemaWithPermissions = applyMiddleware(schema, permissions);
 
 app.use(express.json())
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema: schemaWithPermissions ,
   context: async ({ req }) => {
     // const token = req.headers.authorization||' ';
     // if(token.length>5){
@@ -50,17 +48,15 @@ const server = new ApolloServer({
     //   if(user){
     //     return {user}
     //   }
-    //     return {reuslt:null};  
-      
+    //     return {reuslt:null};
+
     // }else{
     //   return { reuslt: null };
     // }
-    return{
+    return {
       prisma,
-
-    }
-      
-  }
+    };
+  },
 });
 
 

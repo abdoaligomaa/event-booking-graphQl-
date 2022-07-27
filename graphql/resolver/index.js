@@ -11,14 +11,9 @@ const { checkValidpassword } = require("./utils.js/checkValidPass");
 
 module.exports = {
   RootQuery: {
-    sayWelcome: (_, arg, context) => {
-      if(context.reuslt===null){
-        return "you can not use this resolver"
-      }
-      if(context.user){
-
-        return ` welcome ${context.user.email}`
-      }
+    sayWelcome: (_, {name}, context) => {
+      return `welcome ${name} , how are you `
+      
     },
 
     // get all events
