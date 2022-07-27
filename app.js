@@ -5,15 +5,15 @@ const port=process.env.PORT || 3000
 const {PrismaClient}=require("@prisma/client")
 const prisma=new PrismaClient()
 
-const {AuthenticationError } = require("apollo-server");
+// const {AuthenticationError } = require("apollo-server");
 
 const typeDefs = require("./graphql/schema/index");
 const resolvers = require("./graphql/resolver/index");
 
-// const {graphqlHTTP}=require('express-graphql')
-const { ApolloServer, gql,  } = require("apollo-server");
+const { ApolloServer, gql, AuthenticationError } = require("apollo-server");
 const  {makeExecutableSchema}=require('graphql-tools')
 const {applyMiddleware}=require('graphql-middleware')
+const {shield}=require('graphql-shield')
 
 const {getUserByToken}=require('./graphql/resolver/utils.js/getuserByToken')
 
@@ -44,16 +44,20 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => {
-    const token = req.headers.authorization||' ';
-    if(token.length>5){
-      const user = getUserByToken(token)
-      if(user){
-        return {user}
-      }
-        return {reuslt:null};  
+    // const token = req.headers.authorization||' ';
+    // if(token.length>5){
+    //   const user = getUserByToken(token)
+    //   if(user){
+    //     return {user}
+    //   }
+    //     return {reuslt:null};  
       
-    }else{
-      return { reuslt: null };
+    // }else{
+    //   return { reuslt: null };
+    // }
+    return{
+      prisma,
+
     }
       
   }

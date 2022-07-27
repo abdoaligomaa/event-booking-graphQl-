@@ -12,7 +12,6 @@ const { checkValidpassword } = require("./utils.js/checkValidPass");
 module.exports = {
   RootQuery: {
     sayWelcome: (_, arg, context) => {
-      console.log(context)
       if(context.reuslt===null){
         return "you can not use this resolver"
       }
@@ -24,6 +23,7 @@ module.exports = {
 
     // get all events
     Events: async (parent, arg) => {
+      
       const events = await prisma.event.findMany();
       return events;
     },
