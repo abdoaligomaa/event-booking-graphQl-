@@ -13,7 +13,7 @@ const resolvers = require("./graphql/resolver/index");
 const { ApolloServer, gql, AuthenticationError } = require("apollo-server");
 const  {makeExecutableSchema}=require('graphql-tools')
 const {applyMiddleware}=require('graphql-middleware')
-const {shield}=require('graphql-shield')
+const {shield,rule}=require('graphql-shield')
 
 const {getUserByToken}=require('./graphql/resolver/utils.js/getuserByToken')
 
@@ -29,9 +29,14 @@ const schema =makeExecutableSchema({
   typeDefs,
   resolvers,
 }) 
-// permission for the resovers  
+// permission for the resovers
+const testRule=rule()((parent,arg,context,info)=>{
+  return false
+})
 const permissions = shield({
-  RootQuery: {},
+  RootQuery: {
+    sayWelcome:testRule
+  },
   RootMutation:{
     
   },
