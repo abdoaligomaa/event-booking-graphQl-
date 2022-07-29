@@ -32,11 +32,11 @@ const schema =makeExecutableSchema({
 }) 
 // permission for the resovers
 const testRule=rule()((parent,arg,context,info)=>{
-  return false
+  return true
 })
 const permissions = shield({
   RootQuery: {
-    sayWelcome:testRule
+    
   },
   RootMutation:{
     
@@ -45,26 +45,29 @@ const permissions = shield({
 const schemaWithPermissions = applyMiddleware(schema, permissions);
 
 app.use(express.json())
-// app.get('/',async(res,res)=>{
-//   const us
-// })
-const server = new ApolloServer({
-  schema: schemaWithPermissions ,
-  context: async ({ req }) => {
-    // const token = req.headers.authorization||' ';
-    // if(token.length>5){
-    //   const user = getUserByToken(token)
-    //   if(user){
-    //     return {user}
-    //   }
-    //     return {reuslt:null};
 
-    // }else{
-    //   return { reuslt: null };
-    // }
-    return {
-      prisma,
-    };
+const server = new ApolloServer({
+  schema  ,
+  context: async ({ req }) => {
+    const token = req.headers.authorization;
+    if(!token){
+      throw new Error('you should Enter the tokne')
+    }
+    try {
+      const user = getUserByToken(token)
+      return {
+        prisma,
+        user
+      };
+      
+    } catch (error) {
+      throw new Error("token is false");
+      
+    }
+    // return {
+    //   prisma,
+    //   user:'abdo ali',
+    // };
   },
 });
 

@@ -11,16 +11,23 @@ const { checkValidpassword } = require("./utils.js/checkValidPass");
 
 module.exports = {
   RootQuery: {
-    sayWelcome: (_, {name}, context) => {
-      return `welcome ${name} , how are you `
-      
+    sayWelcome: (_, { name }, context) => {
+      // console.log(context);
+      return `welcome ${name} , how are you `;
     },
 
     // get all events
     Events: async (parent, arg) => {
-      
       const events = await prisma.event.findMany();
       return events;
+    },
+    deleteUser: async () => {
+      await prisma.user.deleteMany();
+      return "delete users is done";
+    },
+    deleteEvent: async () => {
+      await prisma.event.deleteMany();
+      return "delete events is done";
     },
 
     // get all users

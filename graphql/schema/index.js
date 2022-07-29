@@ -23,7 +23,7 @@ module.exports = buildSchema(`
             email:String!
             createdEvents:[Event!]
             bookedEvents:[Event!]
-            token:String!
+            token:String
         }
 
         input EventInput{
@@ -50,6 +50,8 @@ module.exports = buildSchema(`
             sayWelcome(name:String!):String!
             Events:[Event!]!
             Users:[UserReturn!]!
+            deleteUser:String!
+            deleteEvent:String!
         }
         type RootMutation{
             sayHellow(name:String):String

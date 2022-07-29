@@ -8,7 +8,7 @@ const getUserByToken =(token) => {
         return user;
     }
   } catch (error) {
-    return null;
+    throw new Error('There are error in the token');
   }
 };
 module.exports = { getUserByToken };
