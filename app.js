@@ -16,6 +16,7 @@ const {applyMiddleware}=require('graphql-middleware')
 const {shield,rule}=require('graphql-shield')
 
 const {getUserByToken}=require('./graphql/resolver/utils.js/getuserByToken')
+const { argsToArgsConfig, assertUnionType } = require('graphql/type/definition')
 
 
 /* 
@@ -44,6 +45,9 @@ const permissions = shield({
 const schemaWithPermissions = applyMiddleware(schema, permissions);
 
 app.use(express.json())
+// app.get('/',async(res,res)=>{
+//   const us
+// })
 const server = new ApolloServer({
   schema: schemaWithPermissions ,
   context: async ({ req }) => {
