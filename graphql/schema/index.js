@@ -8,13 +8,22 @@ module.exports = buildSchema(`
             price:Int
             date:String!
             CreatUser: User!
+            createdAt:String!
         }
         type User {
             id: String!
             name:String!
             email:String!
             password:String
-            createdEvents:[Event]
+            createdEvents:[Event!]
+        }
+        type UserReturn{
+            id:String!
+            name:String!
+            email:String!
+            createdEvents:[Event!]
+            bookedEvents:[Event!]
+            token:String!
         }
 
         input EventInput{
@@ -24,32 +33,29 @@ module.exports = buildSchema(`
             
         }
         
-        input  userRegestration{
-            name:String!
+        input UserInput{
+            name:String
             email:String!
             password:String!
         }
+        """
+        comment
         input UserlogIN{
             email:String!
             password:String!
         }
-        type UserReturn{
-            id:String!
-            name:String!
-            email:String!
-            token:String
-        }
+        """
 
         type RootQuery{
             sayWelcome(name:String!):String!
             Events:[Event!]!
-            Users:[User!]!
+            Users:[UserReturn!]!
         }
         type RootMutation{
             sayHellow(name:String):String
             CreateEvent(eventInput:EventInput):Event!
-            regester( userRegestration: userRegestration!):UserReturn!
-            logIn(userLogIn:UserlogIN!):UserReturn!
+            regester(userRegestration: UserInput!):UserReturn!
+            logIn(userLogIn:UserInput!):UserReturn!
         } 
         schema {
             query:RootQuery

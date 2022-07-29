@@ -11,13 +11,14 @@ datasource db {
 }
 
 model Event {
-  id          Int      @unique @default(autoincrement())
+  id          String      @id @default(uuid())
   title       String
   description String
-  price       Int
-  date        DateTime @default(now())
+  price       Int         @default(0)
+  date        DateTime    @default(now())
   createId    String
-  CreateUser  User     @relation(fields: [createId], references: [id])
+  CreateUser  User        @relation(fields: [createId], references: [id])
+  bookEvent   bookEvent[]
 }
 
 model User {
@@ -26,7 +27,14 @@ model User {
   email         String  @unique
   password      String
   createdEvents Event[]
+  bookEventUsers bookEvent[]
 }
 
+model bookEvent {
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id])
 
-
+  @@unique([userId, eventId])
+}
