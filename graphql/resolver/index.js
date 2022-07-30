@@ -36,12 +36,25 @@ module.exports = {
       // console.log(users);
       return users;
     },
+    getUser: async (parent, { userId }, context) => {
+      const User = await prisma.user.findFirst({
+        where: {
+          id: userId,
+        },
+      });
+      if (!User) {
+        throw new Error(
+          "you should Enter A valid id (there isn't user in this id)"
+        );
+      }
+      return User;
+    },
   },
   RootMutation: {
     sayHellow: (_, arg, context) => `hellow ${arg.name}, how are you `,
 
     CreateEvent: async (_, args, context) => {
-      console.log(context)
+      console.log(context);
       const event = await prisma.event.create({
         data: {
           title: args.eventInput.title,
@@ -134,7 +147,7 @@ module.exports = {
       return user;
     },
   },
-  User: {
+  UserReturn: {
     createdEvents: async (parent, args) => {
       const Events = await prisma.event.findMany({
         where: {

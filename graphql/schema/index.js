@@ -52,6 +52,7 @@ module.exports = buildSchema(`
             Users:[UserReturn!]!
             deleteUser:String!
             deleteEvent:String!
+            getUser(userId:String!):UserReturn
         }
         type RootMutation{
             sayHellow(name:String):String
