@@ -38,20 +38,20 @@ module.exports = {
     },
   },
   RootMutation: {
-    sayHellow: (_, arg) => `hellow ${arg.name}, how are you `,
+    sayHellow: (_, arg, context) => `hellow ${arg.name}, how are you `,
 
-    CreateEvent: async (_, args) => {
+    CreateEvent: async (_, args, context) => {
+      console.log(context)
       const event = await prisma.event.create({
         data: {
-          // id: args.eventInput.id,
           title: args.eventInput.title,
           description: args.eventInput.description,
           price: args.eventInput.price,
-          createId: 1,
+          createId: context.user.id,
           // date: args.eventInput.date,
         },
       });
-      // console.log(event.CreatUser);
+      console.log(event);
 
       return event;
     },
