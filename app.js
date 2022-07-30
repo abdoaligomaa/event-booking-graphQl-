@@ -48,7 +48,7 @@ app.use(express.json())
 
 const server = new ApolloServer({
   schema  ,
-  context: async ({ req }) => {
+  context:  ({ req }) => {
     const token = req.headers.authorization;
     if(!token){
       throw new Error('you should Enter the tokne')
