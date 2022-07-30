@@ -53,12 +53,15 @@ module.exports = buildSchema(`
             deleteUser:String!
             deleteEvent:String!
             getUser(userId:String!):UserReturn
+            getEvent(eventId:String!):Event
         }
         type RootMutation{
             sayHellow(name:String):String
             CreateEvent(eventInput:EventInput):Event!
             regester(userRegestration: UserInput!):UserReturn!
             logIn(userLogIn:UserInput!):UserReturn!
+            deleteUser(userId:String!):UserReturn
+            deleteEvent(eventId:String!):Event
         } 
         schema {
             query:RootQuery
