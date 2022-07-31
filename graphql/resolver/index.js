@@ -196,6 +196,31 @@ module.exports = {
       });
       return User;
     },
+    bookedEvent:async(parent,{eventId},context)=>{
+      // check for existing or not
+      const ExistEvent = await prisma.event.findFirst({
+        where: {
+          id: eventId,
+        },
+      });
+      if (!ExistEvent) {
+        throw new Error(
+          "Event not Exist ,you can't booked non Existing Event"
+        );
+      }
+      const booked = await prisma.bookEvent.create({
+        data: {
+          eventId: eventId,
+          userId: context.user.id,
+        },
+      });
+      if(booked){
+        return 'Event is booked correctly'
+      }else{
+        return "you did't book that event ,some thing went wrong";
+
+      }
+    }
   },
 
   Event: {
@@ -217,13 +242,13 @@ module.exports = {
       });
       return Events;
     },
-    bookedEvents:async(parent,args)=>{
+    bookedEvents: async (parent, args) => {
       const BookedEvents = await prisma.bookEvent.findMany({
         where: {
           userId: parent.id,
         },
       });
       return BookedEvents;
-    }
+    },
   },
 };

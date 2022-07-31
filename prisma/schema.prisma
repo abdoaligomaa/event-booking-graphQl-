@@ -16,7 +16,7 @@ model Event {
   description String
   price       Int         @default(0)
   createdAt   DateTime    @default(now())
-  date   Int    @default(1000000)
+  date        Int         @default(1000000)
   createId    String
   CreateUser  User        @relation(fields: [createId], references: [id])
   bookEvent   bookEvent[]
@@ -32,10 +32,11 @@ model User {
 }
 
 model bookEvent {
+  id String @id @default(uuid())
   userId  String
   user    User   @relation(fields: [userId], references: [id])
   eventId String
   event   Event  @relation(fields: [eventId], references: [id])
 
-  @@unique([userId, eventId])
+  // @@unique([userId, eventId])
 }
