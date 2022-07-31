@@ -62,6 +62,15 @@ module.exports = {
       }
       return Event;
     },
+    getCreatedEvents: async (parent, arg, context) => {
+      const Events = await prisma.event.findMany({
+        where: {
+          createId: context.user.id,
+        },
+      });
+      return Events
+    },
+    
   },
   RootMutation: {
     sayHellow: (_, arg, context) => `hellow ${arg.name}, how are you `,
@@ -151,16 +160,16 @@ module.exports = {
     },
     deleteEvent: async (parent, { eventId }, context) => {
       // check for existing or not
-       const ExistEvent = await prisma.event.findFirst({
-         where: {
-           id: eventId,
-         },
-       });
-       if (!ExistEvent) {
-         throw new Error(
-           "you should Enter A valid id (there isn't Event in this id)"
-         );
-       }
+      const ExistEvent = await prisma.event.findFirst({
+        where: {
+          id: eventId,
+        },
+      });
+      if (!ExistEvent) {
+        throw new Error(
+          "you should Enter A valid id (there isn't Event in this id)"
+        );
+      }
       const Event = await prisma.event.delete({
         where: {
           id: eventId,
@@ -170,25 +179,26 @@ module.exports = {
     },
     deleteUser: async (parent, { userId }, context) => {
       // check for exsiting
-       const ExistUser = await prisma.user.findFirst({
-         where: {
-           id: userId,
-         },
-       });
-       if (!ExistUser) {
-         throw new Error(
-           "you should Enter A valid id (there isn't user in this id)"
-         );
-        }
-         
+      const ExistUser = await prisma.user.findFirst({
+        where: {
+          id: userId,
+        },
+      });
+      if (!ExistUser) {
+        throw new Error(
+          "you should Enter A valid id (there isn't user in this id)"
+        );
+      }
+
       const User = await prisma.user.delete({
         where: {
           id: userId,
-      }})
+        },
+      });
       return User;
-      }
     },
-  
+  },
+
   Event: {
     CreatUser: async (parent, args) => {
       const user = await prisma.user.findFirst({

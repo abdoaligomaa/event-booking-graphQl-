@@ -7,7 +7,7 @@ module.exports = buildSchema(`
             description:String!
             price:Int
             date:String!
-            CreatUser: User!
+            CreatUser: UserReturn!
             createdAt:String!
         }
         type User {
@@ -54,6 +54,7 @@ module.exports = buildSchema(`
             deleteEvent:String!
             getUser(userId:String!):UserReturn
             getEvent(eventId:String!):Event
+            getCreatedEvents:[Event!]
         }
         type RootMutation{
             sayHellow(name:String):String
