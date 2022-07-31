@@ -68,9 +68,8 @@ module.exports = {
           createId: context.user.id,
         },
       });
-      return Events
+      return Events;
     },
-    
   },
   RootMutation: {
     sayHellow: (_, arg, context) => `hellow ${arg.name}, how are you `,
@@ -218,5 +217,13 @@ module.exports = {
       });
       return Events;
     },
+    bookedEvents:async(parent,args)=>{
+      const BookedEvents = await prisma.bookEvent.findMany({
+        where: {
+          userId: parent.id,
+        },
+      });
+      return BookedEvents;
+    }
   },
 };

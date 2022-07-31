@@ -8,6 +8,7 @@ module.exports = buildSchema(`
             price:Int
             date:String!
             CreatUser: UserReturn!
+            bookedUsers:[UserReturn!]
             createdAt:String!
         }
         type User {
@@ -16,6 +17,7 @@ module.exports = buildSchema(`
             email:String!
             password:String
             createdEvents:[Event!]
+            bookedEvents:[Event!]
         }
         type UserReturn{
             id:String!
@@ -63,6 +65,7 @@ module.exports = buildSchema(`
             logIn(userLogIn:UserInput!):UserReturn!
             deleteUser(userId:String!):UserReturn
             deleteEvent(eventId:String!):Event
+            bookedEvent(eventId:String!):Event
         } 
         schema {
             query:RootQuery
