@@ -249,15 +249,24 @@ module.exports = {
       return Events;
     },
     bookedEvents: async (parent, args) => {
-      const BookedEvents = await prisma.bookEvent.findMany({
+      let BookedEvents = await prisma.bookEvent.findMany({
         where: {
           userId: parent.id,
         },
-        select: {
-          event: true,
-        },
-      });
-      return BookedEvents;
+        select:{
+          event:true
+          }
+        }
+      );
+
+      let arrayOfBookEvents=[]
+      for (let index = 0; index < BookedEvents.length; index++) {
+        arrayOfBookEvents.push(BookedEvents[index].event);
+       
+      }
+      
+      return arrayOfBookEvents
+     
     },
   },
 };
