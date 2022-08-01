@@ -212,21 +212,55 @@ module.exports = {
           eventId: eventId,
         },
       });
-      if(isBooked){
-        return "this user is booked the Event,you can't book it another time "
+      if (isBooked) {
+        throw new Error(
+          "you are already booked this Event and you can't book it anther time"
+        );
       }
-      const booked = await prisma.bookEvent.create({
+      const bookedEvent = await prisma.bookEvent.create({
         data: {
           userId: context.user.id,
           eventId: eventId,
         },
       });
-      if (booked) {
-        return "Event is booked correctly";
-      } else {
-        return "you did't book that event ,some thing went wrong";
-      }
+      return bookedEvent;
     },
+    CancelBooking:async(parent,{eventId},context)=>{
+      //check if there is Event in this id
+      const IsExistingEvent = await prisma.event.findFirst({
+        where: {
+          id: eventId,
+        },
+      });
+      if(!IsExistingEvent){
+        throw new Error(
+          "there are not event is this id"
+        );
+      }
+      // allow only the user who book this event to cancel it
+      const EventByUser=await prisma.bookEvent.findFirst({
+        where:{
+          eventId:eventId,
+          userId:context.user.id
+        }
+      })
+      if(!EventByUser){
+        throw new Error("you can't cancel Event you did't book it");
+      }
+      // delete this event 
+      const Event = await prisma.bookEvent.delete({
+        where: {
+          userId_eventId: {
+            eventId: eventId,
+            userId: context.user.id,
+          },
+        },
+        select:{
+          event:true
+        }
+      });
+      return Event.event
+    }
   },
 
   Event: {
@@ -253,20 +287,17 @@ module.exports = {
         where: {
           userId: parent.id,
         },
-        select:{
-          event:true
-          }
-        }
-      );
+        select: {
+          event: true,
+        },
+      });
 
-      let arrayOfBookEvents=[]
+      let arrayOfBookEvents = [];
       for (let index = 0; index < BookedEvents.length; index++) {
         arrayOfBookEvents.push(BookedEvents[index].event);
-       
       }
-      
-      return arrayOfBookEvents
-     
+
+      return arrayOfBookEvents;
     },
   },
 };

@@ -66,6 +66,7 @@ module.exports = buildSchema(`
             deleteUser(userId:String!):UserReturn
             deleteEvent(eventId:String!):Event
             bookEvent(eventId:String!):String!
+            CancelBooking(eventId:String!):Event!
         } 
         schema {
             query:RootQuery

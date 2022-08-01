@@ -32,7 +32,6 @@ model User {
 }
 
 model bookEvent {
-  // id String @id @default(uuid())
   userId  String
   user    User   @relation(fields: [userId], references: [id])
   eventId String
