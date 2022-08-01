@@ -206,10 +206,19 @@ module.exports = {
       if (!ExistEvent) {
         throw new Error("Event not Exist ,you can't booked non Existing Event");
       }
+      const isBooked = await prisma.bookEvent.findFirst({
+        where: {
+          userId: context.user.id,
+          eventId: eventId,
+        },
+      });
+      if(isBooked){
+        return "this user is booked the Event,you can't book it another time "
+      }
       const booked = await prisma.bookEvent.create({
         data: {
-          eventId: eventId,
           userId: context.user.id,
+          eventId: eventId,
         },
       });
       if (booked) {
@@ -244,10 +253,9 @@ module.exports = {
         where: {
           userId: parent.id,
         },
-        include:{
-          event:true
-        }
-        
+        select: {
+          event: true,
+        },
       });
       return BookedEvents;
     },
