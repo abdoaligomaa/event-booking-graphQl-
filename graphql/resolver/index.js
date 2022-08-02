@@ -18,7 +18,11 @@ module.exports = {
 
     // get all events
     Events: async (parent, arg) => {
-      const events = await prisma.event.findMany();
+      const {limit,skip}=arg
+      const events = await prisma.event.findMany({
+        skip:skip,
+        take:limit
+      });
       return events;
     },
     deleteUser: async () => {
