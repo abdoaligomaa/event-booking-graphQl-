@@ -252,7 +252,12 @@ module.exports = {
           eventId: eventId,
         },
       });
-      return bookedEvent;
+      if(bookedEvent){
+
+        return "the booked is done";
+      }else{
+        return "error in booked event"
+      }
     },
     CancelBooking: async (parent, { eventId }, context) => {
       //check if there is Event in this id
