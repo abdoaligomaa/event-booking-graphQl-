@@ -233,10 +233,12 @@ module.exports = {
       if (!ExistEvent) {
         throw new Error("Event not Exist ,you can't booked non Existing Event");
       }
-      const isBooked = await prisma.bookEvent.findFirst({
+      const isBooked = await prisma.bookEvent.findUnique({
         where: {
-          userId: context.user.id,
-          eventId: eventId,
+          userId_eventId: {
+            eventId: eventId,
+            userId: context.user.id,
+          },
         },
       });
       if (isBooked) {
@@ -265,8 +267,10 @@ module.exports = {
       // allow only the user who book this event to cancel it
       const EventByUser = await prisma.bookEvent.findFirst({
         where: {
-          eventId: eventId,
-          userId: context.user.id,
+          userId_eventId: {
+            eventId: eventId,
+            userId: context.user.id,
+          },
         },
       });
       if (!EventByUser) {
@@ -316,7 +320,14 @@ module.exports = {
       });
       return Events;
     },
-    bookedEvents: async (parent, args) => {
+    bookedEvents: async (parent, arg) => {
+      // pagination
+      let { page, limit } = arg;
+      page = page > 0 ? page : 1;
+      limit = limit > 0 ? limit : 1;
+      const startIndex = (page - 1) * limit;
+      // const endIndex = page * limit
+
       let BookedEvents = await prisma.bookEvent.findMany({
         where: {
           userId: parent.id,
@@ -324,6 +335,8 @@ module.exports = {
         select: {
           event: true,
         },
+        skip: startIndex,
+        take: limit,
       });
 
       let arrayOfBookEvents = [];

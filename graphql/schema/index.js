@@ -24,7 +24,7 @@ module.exports = buildSchema(`
             name:String!
             email:String!
             createdEvents(page:Int!,limit:Int!):[Event!]
-            bookedEvents:[Event!]
+            bookedEvents(page:Int!,limit:Int!):[Event!]
             token:String
         }
 
