@@ -18,6 +18,7 @@ module.exports = {
 
     // get all events
     Events: async (parent, arg) => {
+      // pagination 
       let { page, limit } = arg;
       page = page > 0 ? page : 1;
       limit = limit > 0 ? limit : 1;
@@ -40,6 +41,7 @@ module.exports = {
 
     // get all users
     Users: async (parent, arg) => {
+      // pagination 
       let { page, limit } = arg;
       page = page > 0 ? page : 1;
       limit = limit > 0 ? limit : 1;
@@ -79,10 +81,19 @@ module.exports = {
       return Event;
     },
     getCreatedEvents: async (parent, arg, context) => {
+      // pagination 
+      let { page, limit } = arg;
+      page = page > 0 ? page : 1;
+      limit = limit > 0 ? limit : 1;
+      const startIndex = (page - 1) * limit;
+      // const endIndex = page * limit
+
       const Events = await prisma.event.findMany({
         where: {
           createId: context.user.id,
         },
+        skip: startIndex,
+        take: limit,
       });
       return Events;
     },
@@ -288,11 +299,20 @@ module.exports = {
     },
   },
   UserReturn: {
-    createdEvents: async (parent, args) => {
+    createdEvents: async (parent, arg) => {
+      // pagination
+      let { page, limit } = arg;
+      page = page > 0 ? page : 1;
+      limit = limit > 0 ? limit : 1;
+      const startIndex = (page - 1) * limit;
+      // const endIndex = page * limit
+
       const Events = await prisma.event.findMany({
         where: {
           createId: parent.id,
         },
+        skip: startIndex,
+        take: limit,
       });
       return Events;
     },

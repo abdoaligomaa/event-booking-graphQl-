@@ -23,7 +23,7 @@ module.exports = buildSchema(`
             id:String!
             name:String!
             email:String!
-            createdEvents:[Event!]
+            createdEvents(page:Int!,limit:Int!):[Event!]
             bookedEvents:[Event!]
             token:String
         }
@@ -56,7 +56,7 @@ module.exports = buildSchema(`
             deleteEvent:String!
             getUser(userId:String!):UserReturn
             getEvent(eventId:String!):Event
-            getCreatedEvents:[Event!]
+            getCreatedEvents(page:Int!,limit:Int!):[Event!]
         }
         type RootMutation{
             sayHellow(name:String):String
