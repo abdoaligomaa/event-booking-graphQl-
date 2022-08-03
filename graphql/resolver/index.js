@@ -18,10 +18,14 @@ module.exports = {
 
     // get all events
     Events: async (parent, arg) => {
-      const {limit,skip}=arg
+      let { page, limit } = arg;
+      page = page > 0 ? page : 1;
+      limit = limit > 0 ? limit : 1;
+      const startIndex = (page - 1) * limit;
+      // const endIndex = page * limit
       const events = await prisma.event.findMany({
-        skip:skip,
-        take:limit
+        skip: startIndex,
+        take: limit,
       });
       return events;
     },
@@ -35,8 +39,16 @@ module.exports = {
     },
 
     // get all users
-    Users: async () => {
-      const users = await prisma.user.findMany();
+    Users: async (parent, arg) => {
+      let { page, limit } = arg;
+      page = page > 0 ? page : 1;
+      limit = limit > 0 ? limit : 1;
+      const startIndex = (page - 1) * limit;
+      // const endIndex = page * limit
+      const users = await prisma.user.findMany({
+        skip: startIndex,
+        take: limit,
+      });
       // console.log(users);
       return users;
     },
@@ -229,29 +241,27 @@ module.exports = {
       });
       return bookedEvent;
     },
-    CancelBooking:async(parent,{eventId},context)=>{
+    CancelBooking: async (parent, { eventId }, context) => {
       //check if there is Event in this id
       const IsExistingEvent = await prisma.event.findFirst({
         where: {
           id: eventId,
         },
       });
-      if(!IsExistingEvent){
-        throw new Error(
-          "there are not event is this id"
-        );
+      if (!IsExistingEvent) {
+        throw new Error("there are not event is this id");
       }
       // allow only the user who book this event to cancel it
-      const EventByUser=await prisma.bookEvent.findFirst({
-        where:{
-          eventId:eventId,
-          userId:context.user.id
-        }
-      })
-      if(!EventByUser){
+      const EventByUser = await prisma.bookEvent.findFirst({
+        where: {
+          eventId: eventId,
+          userId: context.user.id,
+        },
+      });
+      if (!EventByUser) {
         throw new Error("you can't cancel Event you did't book it");
       }
-      // delete this event 
+      // delete this event
       const Event = await prisma.bookEvent.delete({
         where: {
           userId_eventId: {
@@ -259,12 +269,12 @@ module.exports = {
             userId: context.user.id,
           },
         },
-        select:{
-          event:true
-        }
+        select: {
+          event: true,
+        },
       });
-      return Event.event
-    }
+      return Event.event;
+    },
   },
 
   Event: {

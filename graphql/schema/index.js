@@ -50,8 +50,8 @@ module.exports = buildSchema(`
 
         type RootQuery{
             sayWelcome(name:String!):String!
-            Events(skip:Int!,limit:Int!):[Event!]!
-            Users:[UserReturn!]!
+            Events(page:Int!,limit:Int!):[Event!]!
+            Users(page:Int!,limit:Int!):[UserReturn!]!
             deleteUser:String!
             deleteEvent:String!
             getUser(userId:String!):UserReturn
