@@ -298,7 +298,7 @@ module.exports = {
   },
 
   Event: {
-    CreatUser: async (parent, args) => {
+    CreatUser: async (parent, arg) => {
       const user = await prisma.user.findFirst({
         where: {
           id: parent.createId,
@@ -306,6 +306,32 @@ module.exports = {
       });
       return user;
     },
+    bookedUsers:async(parent,arg,context)=>{
+      // pagination
+      let { page, limit } = arg;
+      page = page > 0 ? page : 1;
+      limit = limit > 0 ? limit : 1;
+      const startIndex = (page - 1) * limit;
+      // const endIndex = page * limit
+
+      let BookedUsers = await prisma.bookEvent.findMany({
+        where: {
+          eventId: parent.id,
+        },
+        select: {
+          user: true,
+        },
+        skip: startIndex,
+        take: limit,
+      });
+
+      let arrayOfBookedUsers = [];
+      for (let index = 0; index < BookedUsers.length; index++) {
+        arrayOfBookedUsers.push(BookedUsers[index].user);
+      }
+
+      return arrayOfBookedUsers;
+    }
   },
   UserReturn: {
     createdEvents: async (parent, arg) => {
