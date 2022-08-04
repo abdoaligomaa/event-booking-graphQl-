@@ -47,23 +47,34 @@ const schemaWithPermissions = applyMiddleware(schema, permissions);
 app.use(express.json())
 
 const server = new ApolloServer({
-  schema  ,
-  context:  ({ req }) => {
+  schema: schemaWithPermissions,
+  context: ({ req }) => {
+    let user;
     const token = req.headers.authorization;
-    if(!token){
-      throw new Error('you should Enter the tokne')
+    if (token) {
+      try {
+        user = getUserByToken(token);
+        return { user: user };
+      } catch (error) {
+        return { user: null };
+      }
+    } else {
+      return { user: null };
     }
-    try {
-      const user = getUserByToken(token)
-      return {
-        prisma,
-        user
-      };
-      
-    } catch (error) {
-    throw new Error("token is false");
-      
-    }
+    // if(!token){
+    //   throw new Error('you should Enter the tokne')
+    // }
+    // try {
+    //   const user = getUserByToken(token)
+    //   return {
+    //     prisma,
+    //     user
+    //   };
+
+    // } catch (error) {
+    // throw new Error("token is false");
+
+    // }
     // return {
     //   prisma,
     //   user:'abdo ali',
