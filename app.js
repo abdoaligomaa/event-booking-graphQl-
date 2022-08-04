@@ -30,17 +30,25 @@ const schema =makeExecutableSchema({
   typeDefs,
   resolvers,
 }) 
-// permission for the resovers
-const testRule=rule()((parent,arg,context,info)=>{
+
+// there are no permission in this rule
+const freeToUse=rule()((parent,arg,context,info)=>{
   return true
 })
+
+// permission to prevent not auth users from acess privite resolvers
+const IsAuth=rule()((parent,arg,context,info)=>{
+  const user=context.user
+  if(user)return true
+  else return false
+})
+
+
 const permissions = shield({
   RootQuery: {
-    
+    sayWelcome: IsAuth,
   },
-  RootMutation:{
-    
-  },
+  RootMutation: {},
 });
 const schemaWithPermissions = applyMiddleware(schema, permissions);
 
@@ -82,6 +90,6 @@ const server = new ApolloServer({
   },
 });
 
-server.listen(4000).then(({ url }) => {
+server.listen(3000).then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);
 });
