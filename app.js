@@ -13,10 +13,10 @@ const resolvers = require("./graphql/resolver/index");
 const { ApolloServer, gql, AuthenticationError } = require("apollo-server");
 const  {makeExecutableSchema}=require('graphql-tools')
 const {applyMiddleware}=require('graphql-middleware')
-const {shield,rule}=require('graphql-shield')
+const {shield,rule,allow,deny}=require('graphql-shield')
 
 const {getUserByToken}=require('./graphql/resolver/utils.js/getuserByToken')
-const { argsToArgsConfig, assertUnionType } = require('graphql/type/definition')
+// const { argsToArgsConfig, assertUnionType } = require('graphql/type/definition')
 
 
 /* 
@@ -32,12 +32,12 @@ const schema =makeExecutableSchema({
 }) 
 
 // there are no permission in this rule
-const freeToUse=rule()((parent,arg,context,info)=>{
+const freeToUse=rule()((_parent,_arg,_context,_info)=>{
   return true
 })
 
 // permission to prevent not auth users from acess privite resolvers
-const IsAuth=rule()((parent,arg,context,info)=>{
+const IsAuth=rule()((_parent,_arg,context,_info)=>{
   const user=context.user
   if(user)return true
   else return false
@@ -46,9 +46,18 @@ const IsAuth=rule()((parent,arg,context,info)=>{
 
 const permissions = shield({
   RootQuery: {
+    '*':allow,
     sayWelcome: IsAuth,
+    Events: freeToUse,
   },
-  RootMutation: {},
+  RootMutation: {
+    // "*": allow,
+    regester: freeToUse,
+    logIn: freeToUse,
+    
+  },
+},{
+  debug:true,
 });
 const schemaWithPermissions = applyMiddleware(schema, permissions);
 
@@ -69,27 +78,10 @@ const server = new ApolloServer({
     } else {
       return { user: null };
     }
-    // if(!token){
-    //   throw new Error('you should Enter the tokne')
-    // }
-    // try {
-    //   const user = getUserByToken(token)
-    //   return {
-    //     prisma,
-    //     user
-    //   };
-
-    // } catch (error) {
-    // throw new Error("token is false");
-
-    // }
-    // return {
-    //   prisma,
-    //   user:'abdo ali',
-    // };
+    
   },
 });
 
-server.listen(3000).then(({ url }) => {
+server.listen(4000).then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);
 });
