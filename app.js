@@ -44,21 +44,29 @@ const IsAuth=rule()((_parent,_arg,context,_info)=>{
 })
 
 
-const permissions = shield({
-  RootQuery: {
-    '*':allow,
-    sayWelcome: IsAuth,
-    Events: freeToUse,
+const permissions = shield(
+  {
+    RootQuery: {
+      "*": allow,
+      Events: IsAuth,
+      Users: IsAuth,
+      getCreatedEvents: IsAuth,
+    },
+    RootMutation: {
+      "*": allow,
+      // regester: freeToUse,
+      // logIn: freeToUse,
+      CreateEvent: IsAuth,
+      deleteUser: IsAuth,
+      deleteEvent: IsAuth,
+      bookEvent: IsAuth,
+      CancelBooking: IsAuth,
+    },
   },
-  RootMutation: {
-    // "*": allow,
-    regester: freeToUse,
-    logIn: freeToUse,
-    
-  },
-},{
-  debug:true,
-});
+  {
+    debug: true,
+  }
+);
 const schemaWithPermissions = applyMiddleware(schema, permissions);
 
 app.use(express.json())
