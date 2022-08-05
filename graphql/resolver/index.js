@@ -80,7 +80,7 @@ module.exports = {
       }
       return Event;
     },
-    getCreatedEvents: async (parent, arg, context) => {
+    getCreatedEvents: async (parent, arg,context) => {
       // pagination 
       let { page, limit } = arg;
       page = page > 0 ? page : 1;
@@ -272,10 +272,9 @@ module.exports = {
       // allow only the user who book this event to cancel it
       const EventByUser = await prisma.bookEvent.findFirst({
         where: {
-          userId_eventId: {
             eventId: eventId,
             userId: context.user.id,
-          },
+         
         },
       });
       if (!EventByUser) {

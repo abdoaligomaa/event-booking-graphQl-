@@ -16,8 +16,6 @@ const {applyMiddleware}=require('graphql-middleware')
 const {shield,rule,allow,deny}=require('graphql-shield')
 
 const {getUserByToken}=require('./graphql/resolver/utils.js/getuserByToken')
-// const { argsToArgsConfig, assertUnionType } = require('graphql/type/definition')
-
 
 /* 
   the next step i will do 

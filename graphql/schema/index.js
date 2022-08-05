@@ -23,6 +23,7 @@ module.exports = buildSchema(`
             id:String!
             name:String!
             email:String!
+
             createdEvents(page:Int!,limit:Int!):[Event!]
             bookedEvents(page:Int!,limit:Int!):[Event!]
             token:String
