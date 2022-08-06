@@ -16,7 +16,7 @@ model Event {
   description String
   price       Int         @default(0)
   createdAt   DateTime    @default(now())
-  date        Int         @default(0)
+  date        DateTime?
   createId    String
   CreateUser  User        @relation(fields: [createId], references: [id])
   bookEvent   bookEvent[]

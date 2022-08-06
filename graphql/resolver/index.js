@@ -18,7 +18,7 @@ module.exports = {
 
     // get all events
     Events: async (parent, arg) => {
-      // pagination 
+      // pagination
       let { page, limit } = arg;
       page = page > 0 ? page : 1;
       limit = limit > 0 ? limit : 1;
@@ -30,18 +30,19 @@ module.exports = {
       });
       return events;
     },
-    deleteUser: async () => {
+    // using in dev for easy empity all data in the database
+    /*deleteUser: async () => { 
       await prisma.user.deleteMany();
       return "delete users is done";
     },
     deleteEvent: async () => {
       await prisma.event.deleteMany();
       return "delete events is done";
-    },
+    }, */
 
     // get all users
     Users: async (parent, arg) => {
-      // pagination 
+      // pagination
       let { page, limit } = arg;
       page = page > 0 ? page : 1;
       limit = limit > 0 ? limit : 1;
@@ -80,8 +81,8 @@ module.exports = {
       }
       return Event;
     },
-    getCreatedEvents: async (parent, arg,context) => {
-      // pagination 
+    getCreatedEvents: async (parent, arg, context) => {
+      // pagination
       let { page, limit } = arg;
       page = page > 0 ? page : 1;
       limit = limit > 0 ? limit : 1;
@@ -252,11 +253,10 @@ module.exports = {
           eventId: eventId,
         },
       });
-      if(bookedEvent){
-
+      if (bookedEvent) {
         return "the booked is done";
-      }else{
-        return "error in booked event"
+      } else {
+        return "error in booked event";
       }
     },
     CancelBooking: async (parent, { eventId }, context) => {
@@ -272,9 +272,8 @@ module.exports = {
       // allow only the user who book this event to cancel it
       const EventByUser = await prisma.bookEvent.findFirst({
         where: {
-            eventId: eventId,
-            userId: context.user.id,
-         
+          eventId: eventId,
+          userId: context.user.id,
         },
       });
       if (!EventByUser) {
@@ -305,7 +304,7 @@ module.exports = {
       });
       return user;
     },
-    bookedUsers:async(parent,arg,context)=>{
+    bookedUsers: async (parent, arg, context) => {
       // pagination
       let { page, limit } = arg;
       page = page > 0 ? page : 1;
@@ -330,7 +329,7 @@ module.exports = {
       }
 
       return arrayOfBookedUsers;
-    }
+    },
   },
   UserReturn: {
     createdEvents: async (parent, arg) => {

@@ -41,23 +41,17 @@ module.exports = buildSchema(`
             email:String!
             password:String!
         }
-        """
-        comment
-        input UserlogIN{
-            email:String!
-            password:String!
-        }
-        """
-
+       
         type RootQuery{
             sayWelcome(name:String!):String!
             Events(page:Int!,limit:Int!):[Event!]!
             Users(page:Int!,limit:Int!):[UserReturn!]!
-            deleteUser:String!
-            deleteEvent:String!
             getUser(userId:String!):UserReturn
             getEvent(eventId:String!):Event
             getCreatedEvents(page:Int!,limit:Int!):[Event!]
+            deleteUser:String!
+            deleteEvent:String!
+            
         }
         type RootMutation{
             sayHellow(name:String):String
