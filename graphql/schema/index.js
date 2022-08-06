@@ -6,7 +6,7 @@ module.exports = buildSchema(`
             title:String!
             description:String!
             price:Int
-            date:String!
+            date:String
             CreatUser: UserReturn!
             bookedUsers:[UserReturn!]
             createdAt:String!
@@ -18,21 +18,24 @@ module.exports = buildSchema(`
             password:String
             createdEvents:[Event!]
             bookedEvents:[Event!]
+            createdAt:String
         }
         type UserReturn{
             id:String!
             name:String!
             email:String!
-
             createdEvents(page:Int!,limit:Int!):[Event!]
             bookedEvents(page:Int!,limit:Int!):[Event!]
             token:String
+            createdAt:String
+
         }
 
         input EventInput{
             title:String!
             description:String!
             price:Int
+            date:String!
             
         }
         

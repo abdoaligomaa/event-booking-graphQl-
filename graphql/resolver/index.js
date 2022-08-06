@@ -5,6 +5,7 @@ const { userRegestrationError, UserInputError } = require("apollo-server");
 const { genterateToken } = require("./utils.js/generateToke");
 const { hashPassword } = require("./utils.js/hashedPassword");
 const { CheckExistingUser } = require("./utils.js/checkExistingUser");
+const {convertDateFromStampToString }= require("./utils.js/stringifyDateAndTime");
 const { validateRegisterInput } = require("./utils.js/registrationValidation");
 const { validateLoginInput } = require("./utils.js/loginValidation");
 const { checkValidpassword } = require("./utils.js/checkValidPass");
@@ -24,11 +25,13 @@ module.exports = {
       limit = limit > 0 ? limit : 1;
       const startIndex = (page - 1) * limit;
       // const endIndex = page * limit
-      const events = await prisma.event.findMany({
+      let events = await prisma.event.findMany({
         skip: startIndex,
         take: limit,
       });
-      return events;
+
+      
+      return convertDateFromStampToString(events);
     },
     // using in dev for easy empity all data in the database
     /*deleteUser: async () => { 
@@ -52,7 +55,8 @@ module.exports = {
         skip: startIndex,
         take: limit,
       });
-      // console.log(users);
+      const date = new Date(users[0].createdAt);
+      // console.log(date.);
       return users;
     },
     getUser: async (parent, { userId }, context) => {
@@ -66,7 +70,8 @@ module.exports = {
           "you should Enter A valid id (there isn't user in this id)"
         );
       }
-      return User;
+        return convertDateFromStampToString(User);
+
     },
     getEvent: async (parent, { eventId }, context) => {
       const Event = await prisma.event.findFirst({
@@ -79,7 +84,7 @@ module.exports = {
           "you should Enter A valid id (there isn't Event in this id)"
         );
       }
-      return Event;
+      return convertDateFromStampToString(Event);
     },
     getCreatedEvents: async (parent, arg, context) => {
       // pagination
@@ -96,26 +101,26 @@ module.exports = {
         skip: startIndex,
         take: limit,
       });
-      return Events;
+      return convertDateFromStampToString(Events);
     },
   },
   RootMutation: {
     sayHellow: (_, arg, context) => `hellow ${arg.name}, how are you `,
 
     CreateEvent: async (_, args, context) => {
-      console.log(context);
-      const event = await prisma.event.create({
+      let date = new Date(args.eventInput.date);
+      // date =date.toISOString()
+      console.log(date);
+      let event = await prisma.event.create({
         data: {
           title: args.eventInput.title,
           description: args.eventInput.description,
           price: args.eventInput.price,
           createId: context.user.id,
-          // date: args.eventInput.date,
+          date: date,
         },
       });
-      console.log(event);
-
-      return event;
+      return convertDateFromStampToString(event);
     },
 
     regester: async (_, arg) => {
@@ -347,7 +352,8 @@ module.exports = {
         skip: startIndex,
         take: limit,
       });
-      return Events;
+      return convertDateFromStampToString(Events);
+
     },
     bookedEvents: async (parent, arg) => {
       // pagination
@@ -373,7 +379,7 @@ module.exports = {
         arrayOfBookEvents.push(BookedEvents[index].event);
       }
 
-      return arrayOfBookEvents;
+      return convertDateFromStampToString(arrayOfBookEvents);
     },
   },
 };
