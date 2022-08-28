@@ -5,11 +5,13 @@ const { userRegestrationError, UserInputError } = require("apollo-server");
 const { genterateToken } = require("./utils.js/generateToke");
 const { hashPassword } = require("./utils.js/hashedPassword");
 const { CheckExistingUser } = require("./utils.js/checkExistingUser");
-const {convertDateFromStampToString }= require("./utils.js/stringifyDateAndTime");
+const {
+  convertDateFromStampToString,
+} = require("./utils.js/stringifyDateAndTime");
 const { validateRegisterInput } = require("./utils.js/registrationValidation");
 const { validateLoginInput } = require("./utils.js/loginValidation");
 const { checkValidpassword } = require("./utils.js/checkValidPass");
-const UserValidateSchema=require('../resolver/utils.js/validateInputSchema/userInput')
+const UserValidateSchema = require("../resolver/utils.js/validateInputSchema/userInput");
 const EventInputValidateSchema = require("../resolver/utils.js/validateInputSchema/eventInput");
 
 module.exports = {
@@ -32,7 +34,6 @@ module.exports = {
         take: limit,
       });
 
-      
       return convertDateFromStampToString(events);
     },
     // using in dev for easy empity all data in the database
@@ -72,8 +73,7 @@ module.exports = {
           "you should Enter A valid id (there isn't user in this id)"
         );
       }
-        return convertDateFromStampToString(User);
-
+      return convertDateFromStampToString(User);
     },
     getEvent: async (parent, { eventId }, context) => {
       const Event = await prisma.event.findFirst({
@@ -137,11 +137,14 @@ module.exports = {
     regester: async (_, arg) => {
       // TODO adding validation for user input
       // check validation of inputs
-      
+
       // validate user input using joi
-      const {error,value}=await UserValidateSchema.validate(arg.userRegestration,{abortEarly:false})
-      if(error){
-        throw new UserInputError("Error in Sign UP New User",error);
+      const { error, value } = await UserValidateSchema.validate(
+        arg.userRegestration,
+        { abortEarly: false }
+      );
+      if (error) {
+        throw new UserInputError("Error in Sign UP New User", error);
       }
 
       // check if the user with that email is exist or not in the database
@@ -168,15 +171,14 @@ module.exports = {
     },
 
     logIn: async (_, arg) => {
-      // validate login inputs
-      const { errors, valid } = validateLoginInput(
-        arg.userLogIn.email,
-        arg.userLogIn.password
+      // validate user input using joi
+      const { error, value } = await UserValidateSchema.validate(
+        arg.userRegestration,
+        { abortEarly: false }
       );
-      if (!valid) {
-        throw new UserInputError("Errors", errors);
+      if (error) {
+        throw new UserInputError("Error in Log IN User", error);
       }
-
       // check the user is exist in the database
       const user = await CheckExistingUser(arg.userLogIn.email);
       if (!user) {
@@ -362,7 +364,6 @@ module.exports = {
         take: limit,
       });
       return convertDateFromStampToString(Events);
-
     },
     bookedEvents: async (parent, arg) => {
       // pagination
