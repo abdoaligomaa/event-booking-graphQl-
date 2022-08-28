@@ -10,6 +10,7 @@ const { validateRegisterInput } = require("./utils.js/registrationValidation");
 const { validateLoginInput } = require("./utils.js/loginValidation");
 const { checkValidpassword } = require("./utils.js/checkValidPass");
 const UserValidateSchema=require('../resolver/utils.js/validateInputSchema/userInput')
+const EventInputValidateSchema = require("../resolver/utils.js/validateInputSchema/eventInput");
 
 module.exports = {
   RootQuery: {
@@ -111,7 +112,16 @@ module.exports = {
     CreateEvent: async (_, args, context) => {
       let date = new Date(args.eventInput.date);
       // date =date.toISOString()
+      //EventInputValidateSchema
       console.log(date);
+      // validate Event using joi
+      const { error, value } = await EventInputValidateSchema.validate(
+        args.eventInput,
+        { abortEarly: false }
+      );
+      if (error) {
+        throw new UserInputError("Error in create new event ", error);
+      }
       let event = await prisma.event.create({
         data: {
           title: args.eventInput.title,
