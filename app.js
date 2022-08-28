@@ -16,6 +16,8 @@ const {applyMiddleware}=require('graphql-middleware')
 const {shield,rule,allow,deny}=require('graphql-shield')
 
 const {getUserByToken}=require('./graphql/resolver/utils.js/getuserByToken')
+const PORT = process.env.PORT||4000
+
 
 /* 
   the next step i will do 
@@ -88,6 +90,6 @@ const server = new ApolloServer({
   },
 });
 
-server.listen(4000).then(({ url }) => {
+server.listen(PORT).then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);
 });
