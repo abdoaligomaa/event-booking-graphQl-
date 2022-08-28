@@ -9,6 +9,7 @@ const {convertDateFromStampToString }= require("./utils.js/stringifyDateAndTime"
 const { validateRegisterInput } = require("./utils.js/registrationValidation");
 const { validateLoginInput } = require("./utils.js/loginValidation");
 const { checkValidpassword } = require("./utils.js/checkValidPass");
+const UserValidateSchema=require('../resolver/utils.js/validateInputSchema/userInput')
 
 module.exports = {
   RootQuery: {
@@ -126,13 +127,11 @@ module.exports = {
     regester: async (_, arg) => {
       // TODO adding validation for user input
       // check validation of inputs
-      const { valid, errors } = validateRegisterInput(
-        arg.userRegestration.name,
-        arg.userRegestration.email,
-        arg.userRegestration.password
-      );
-      if (!valid) {
-        throw new UserInputError("Errors", errors);
+      
+      // validate user input using joi
+      const {error,value}=await UserValidateSchema.validate(arg.userRegestration,{abortEarly:false})
+      if(error){
+        throw new UserInputError("Error in Sign UP New User",error);
       }
 
       // check if the user with that email is exist or not in the database
