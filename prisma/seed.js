@@ -22,18 +22,22 @@ const SeedingDb=async()=>{
             {
               title: "title one by abdo one",
               description: "description one by abdo one",
+              date: "2022-07-28T16:22:09.560Z",
             },
             {
               title: "title two by abdo one",
               description: "description two by abdo one",
+              date: "2022-07-28T16:22:09.560Z",
             },
             {
               title: "title Tree by abdo one",
               description: "description Tree by abdo one",
+              date: "2022-07-28T16:22:09.560Z",
             },
             {
               title: "title four by abdo one",
               description: "description four by abdo one",
+              date: "2022-07-28T16:22:09.560Z",
             },
           ],
         },
@@ -52,18 +56,22 @@ const SeedingDb=async()=>{
             {
               title: "title one by abdo Two",
               description: "description one by abdo Two",
+              date: "2022-07-28T16:22:09.560Z",
             },
             {
               title: "title two by abdo Two",
               description: "description two by abdo Two",
+              date: "2022-07-28T16:22:09.560Z",
             },
             {
               title: "title Tree by abdo Two",
               description: "description Tree by abdo Two",
+              date: "2022-07-28T16:22:09.560Z",
             },
             {
               title: "title four by abdo Two",
               description: "description four by abdo Two",
+              date: "2022-07-28T16:22:09.560Z",
             },
           ],
         },
@@ -83,27 +91,30 @@ const SeedingDb=async()=>{
             {
               title: "title one by abdo Tree",
               description: "description one by abdo Tree",
-
+              date: "2022-07-28T16:22:09.560Z",
             },
             {
               title: "title two by abdo Tree",
               description: "description two by abdo Tree",
+              date: "2022-07-28T16:22:09.560Z",
             },
             {
               title: "title Tree by abdo Tree",
               description: "description Tree by abdo Tree",
+              date: "2022-07-28T16:22:09.560Z",
             },
             {
               title: "title four by abdo Tree",
               description: "description four by abdo Tree",
+              date: "2022-07-28T16:22:09.560Z",
             },
           ],
         },
       },
     },
   });
-  console.log(userOne)
-  console.log(userTwo)
-  console.log(userTree);
+  // console.log(userOne)
+  // console.log(userTwo)
+  // console.log(userTree);
 }
 SeedingDb().then(console.log("seeding done")).catch(console.log('error in seeding'))

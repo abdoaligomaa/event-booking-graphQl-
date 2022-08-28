@@ -173,7 +173,7 @@ module.exports = {
     logIn: async (_, arg) => {
       // validate user input using joi
       const { error, value } = await UserValidateSchema.validate(
-        arg.userRegestration,
+        arg.userLogIn,
         { abortEarly: false }
       );
       if (error) {
@@ -204,7 +204,7 @@ module.exports = {
     deleteEvent: async (parent, { eventId }, context) => {
       // check for existing or not
       const ExistEvent = await prisma.event.findFirst({
-        where: {
+      where: {
           id: eventId,
         },
       });

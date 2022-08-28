@@ -19,17 +19,17 @@ model Event {
   date        DateTime?
   createId    String
   CreateUser  User        @relation(fields: [createId], references: [id])
-  bookEvent   bookEvent[]
+  bookedEvent bookEvent[]
 }
 
 model User {
-  id             String      @id @default(uuid())
-  name           String
-  email          String      @unique
-  password       String
-  createdEvents  Event[]
-  bookEventUsers bookEvent[]
-  createdAt      DateTime    @default(now())
+  id            String      @id @default(uuid())
+  name          String
+  email         String      @unique
+  password      String
+  createdEvents Event[]
+  bookedEvent   bookEvent[]
+  createdAt     DateTime    @default(now())
 }
 
 model bookEvent {
