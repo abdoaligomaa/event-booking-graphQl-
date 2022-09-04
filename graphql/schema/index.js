@@ -6,7 +6,8 @@ module.exports = buildSchema(`
             title:String!
             description:String!
             price:Int
-            date:String
+            place:PLACE!
+            date:String!
             CreatUser: UserReturn!
             bookedUsers:[UserReturn!]
             createdAt:String!
@@ -36,6 +37,7 @@ module.exports = buildSchema(`
             description:String!
             price:Int
             date:String!
+            place:PLACE!
             
         }
         
@@ -43,6 +45,12 @@ module.exports = buildSchema(`
             name:String
             email:String!
             password:String!
+        }
+        enum PLACE {
+            hall1
+            hall2
+            hall3
+            garden
         }
        
         type RootQuery{

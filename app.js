@@ -14,6 +14,9 @@ const { ApolloServer, gql, AuthenticationError } = require("apollo-server");
 const  {makeExecutableSchema}=require('graphql-tools')
 const {applyMiddleware}=require('graphql-middleware')
 const {shield,rule,allow,deny}=require('graphql-shield')
+const {
+  ApolloServerPluginLandingPageGraphQLPlayground,
+} = require("apollo-server-core");
 
 const {getUserByToken}=require('./graphql/resolver/utils.js/getuserByToken')
 const PORT = process.env.PORT||4000
@@ -29,6 +32,8 @@ const PORT = process.env.PORT||4000
 const schema =makeExecutableSchema({
   typeDefs,
   resolvers,
+  
+  
 }) 
 
 // there are no permission in this rule
@@ -73,6 +78,10 @@ app.use(express.json())
 
 const server = new ApolloServer({
   schema: schemaWithPermissions,
+    plugins:[
+    ApolloServerPluginLandingPageGraphQLPlayground(),
+  ],
+  
   context: ({ req }) => {
     let user;
     const token = req.headers.authorization;
@@ -88,7 +97,10 @@ const server = new ApolloServer({
     }
     
   },
+
+  
 });
+
 
 server.listen(PORT).then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);

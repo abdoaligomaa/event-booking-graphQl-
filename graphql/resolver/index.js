@@ -129,6 +129,8 @@ module.exports = {
           price: args.eventInput.price,
           createId: context.user.id,
           date: date,
+          place:args.eventInput.place
+          
         },
       });
       return convertDateFromStampToString(event);

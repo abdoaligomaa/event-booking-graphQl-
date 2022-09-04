@@ -6,6 +6,7 @@ const schema = Joi.object({
   //   description: Joi.string().max(1000).min(20).required(),
   price: Joi.number().integer().optional(),
   date: Joi.date().required(),
+  place:Joi.allow()
 });
 
 module.exports = schema;
